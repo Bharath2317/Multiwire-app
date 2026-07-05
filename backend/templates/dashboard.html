@@ -1,0 +1,25 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="d-flex justify-content-between mb-4">
+  <h2>Dashboard</h2>
+
+  <a href="/new" class="btn btn-success"> + New Multi Wire </a>
+</div>
+
+<input class="form-control mb-4" placeholder="Search Multi Wire" />
+
+{% if wires %} {% for wire in wires %}
+
+<div class="card mb-3 shadow-sm">
+  <div class="card-body">
+    <h4>{{ wire.multiwire_no }}</h4>
+
+    <p>Status : {{ wire.status }}</p>
+  </div>
+</div>
+
+{% endfor %} {% else %}
+
+<div class="alert alert-info">No Multi Wires Found</div>
+
+{% endif %} {% endblock %}
