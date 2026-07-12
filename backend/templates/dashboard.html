@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block content %}
 
-<div class="d-flex justify-content-between mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
   <h2>Dashboard</h2>
 
   <a href="/new" class="btn btn-success"> + New Multi Wire </a>
@@ -10,16 +10,18 @@
 
 {% if wires %} {% for wire in wires %}
 
-<div class="card mb-3 shadow-sm">
+<div class="card shadow-sm mb-3">
   <div class="card-body">
     <h4>{{ wire.multiwire_no }}</h4>
 
     <p>Status : {{ wire.status }}</p>
+
+    <a href="/wire/{{ wire.id }}" class="btn btn-primary"> Open </a>
   </div>
 </div>
 
 {% endfor %} {% else %}
 
-<div class="alert alert-info">No Multi Wires Found</div>
+<div class="alert alert-warning">No Multi Wires Found</div>
 
 {% endif %} {% endblock %}

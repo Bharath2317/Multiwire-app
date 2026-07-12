@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="card shadow">
+  <div class="card-body">
+    <h2>{{ wire.multiwire_no }}</h2>
+
+    <hr />
+
+    <h5>Status</h5>
+
+    <p>{{ wire.status }}</p>
+
+    <hr />
+
+    <a href="/entry/{{ wire.id }}/step/0" class="btn btn-success">
+      + Add Daily Entry
+    </a>
+  </div>
+</div>
+
+{% endblock %}

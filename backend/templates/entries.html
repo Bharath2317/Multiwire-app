@@ -1,0 +1,136 @@
+{% extends "base.html" %} {% block content %}
+
+<h2>{{ wire.multiwire_no }}</h2>
+
+<h5 class="text-secondary mb-4">Daily Production Entry</h5>
+
+<form method="POST">
+  <div class="row">
+    <div class="col-md-3 mb-3">
+      <label>Date</label>
+      <input
+        type="date"
+        name="entry_date"
+        value="{{ today }}"
+        class="form-control"
+        required
+      />
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <label>Working Hours</label>
+      <input
+        type="number"
+        step="0.1"
+        name="working_hours"
+        class="form-control"
+      />
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <label>Block No</label>
+      <input name="block_number" class="form-control" />
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <label>Length</label>
+      <input type="number" step="0.01" name="length" class="form-control" />
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <label>Height</label>
+      <input type="number" step="0.01" name="height" class="form-control" />
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <label>No Of Wires</label>
+      <input type="number" name="no_of_wires" class="form-control" />
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <label>Material</label>
+      <input name="material" class="form-control" />
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <label>Hardness</label>
+      <input name="hardness" class="form-control" />
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <label>Down Speed</label>
+      <input type="number" step="0.01" name="down_speed" class="form-control" />
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <label>Peripheral Speed</label>
+      <input
+        type="number"
+        step="0.01"
+        name="peripheral_speed"
+        class="form-control"
+      />
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <label>Tension</label>
+      <input type="number" step="0.01" name="tension" class="form-control" />
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <label>Ampere</label>
+      <input type="number" step="0.01" name="ampere" class="form-control" />
+    </div>
+
+    <div class="col-12 mb-3">
+      <label>Remarks</label>
+      <textarea name="remarks" class="form-control"></textarea>
+    </div>
+  </div>
+
+  <button class="btn btn-success">Save Entry</button>
+</form>
+
+<hr />
+
+<h3>Daily Entries</h3>
+
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Date</th>
+
+      <th>Block</th>
+
+      <th>Length</th>
+
+      <th>Height</th>
+
+      <th>Material</th>
+
+      <th>Hardness</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for e in entries %}
+
+    <tr>
+      <td>{{ e.entry_date }}</td>
+
+      <td>{{ e.block_number }}</td>
+
+      <td>{{ e.length }}</td>
+
+      <td>{{ e.height }}</td>
+
+      <td>{{ e.material }}</td>
+
+      <td>{{ e.hardness }}</td>
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
