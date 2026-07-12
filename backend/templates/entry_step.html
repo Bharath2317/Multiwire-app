@@ -1,0 +1,62 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="card shadow-lg p-4">
+  <h3>{{ wire.multiwire_no }}</h3>
+
+  <div class="progress mb-4" style="height: 20px">
+    <div
+      class="progress-bar"
+      role="progressbar"
+      style="width: {{ ((step + 1) / total) * 100 }}%;"
+    ></div>
+  </div>
+
+  <h5>Question {{ step + 1 }} of {{ total }}</h5>
+
+  <h2>{{ field_label }}</h2>
+
+  <form method="POST">
+    {% if field_type == "textarea" %}
+
+    <textarea class="form-control" rows="5" name="{{ field_name }}">
+{{ value }}</textarea
+    >
+
+    {% else %}
+
+    <input
+      class="form-control form-control-lg"
+      type="{{ field_type }}"
+      name="{{ field_name }}"
+      value="{% if field_name == 'entry_date' and value == '' %}{{ today }}{% else %}{{ value }}{% endif %}"
+      required
+    />
+
+    {% endif %}
+
+    <div class="d-flex justify-content-between mt-4">
+      {% if step > 0 %}
+
+      <a
+        href="{{ url_for('entry.entry_step',
+                                    wire_id=wire.id,
+                                    step=step-1) }}"
+        class="btn btn-secondary"
+      >
+        ← Back
+      </a>
+
+      {% else %}
+
+      <div></div>
+
+      {% endif %}
+
+      <button class="btn btn-primary">
+        {% if step == total-1 %} Review {% else %} Next → {% endif %}
+      </button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

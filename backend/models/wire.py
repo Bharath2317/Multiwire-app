@@ -18,3 +18,9 @@ class Wire(db.Model):
         default=datetime.utcnow,
         onupdate=datetime.utcnow,
     )
+    entries = db.relationship(
+    "Entry",
+    backref="wire",
+    lazy=True,
+    cascade="all, delete-orphan"
+)

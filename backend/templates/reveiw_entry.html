@@ -1,0 +1,23 @@
+{% extends "base.html" %} {% block content %}
+
+<h2>Review Entry</h2>
+
+<table class="table table-bordered">
+  {% for key,value in data.items() %}
+
+  <tr>
+    <th>{{ key }}</th>
+
+    <td>{{ value }}</td>
+  </tr>
+
+  {% endfor %}
+</table>
+
+<form method="POST">
+  <a href="/entry/{{ wire.id }}/step/14" class="btn btn-secondary"> Back </a>
+
+  <button class="btn btn-success">Save Entry</button>
+</form>
+
+{% endblock %}
