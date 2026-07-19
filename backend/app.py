@@ -7,6 +7,7 @@ from routes.entry import entry_bp
 
 from routes.dashboard import dashboard_bp
 from routes.wire import wire_bp
+from routes.export import export_bp
 
 
 def create_app():
@@ -26,6 +27,7 @@ def create_app():
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(wire_bp)
     app.register_blueprint(entry_bp)
+    app.register_blueprint(export_bp)
 
     return app
 
