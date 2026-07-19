@@ -1,27 +1,62 @@
 {% extends "base.html" %} {% block content %}
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h2>Dashboard</h2>
+<div class="container mt-4">
+  <!-- Dashboard Cards -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card shadow text-center">
+        <div class="card-body">
+          <h5>Total Wires</h5>
 
-  <a href="/new" class="btn btn-success"> + New Multi Wire </a>
-</div>
-
-<input class="form-control mb-4" placeholder="Search Multi Wire" />
-
-{% if wires %} {% for wire in wires %}
-
-<div class="card shadow-sm mb-3">
-  <div class="card-body">
-    <h4>{{ wire.multiwire_no }}</h4>
-
-    <p>Status : {{ wire.status }}</p>
-
-    <a href="/wire/{{ wire.id }}" class="btn btn-primary"> Open </a>
+          <h2>{{ wires|length }}</h2>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Dashboard</h2>
+
+    <a href="/new" class="btn btn-success"> + New Multi Wire </a>
+  </div>
+
+  <!-- Search -->
+  <form method="GET" class="mb-4">
+    <div class="input-group">
+      <input
+        type="text"
+        name="search"
+        class="form-control"
+        placeholder="Search Multi Wire..."
+        value="{{ search }}"
+      />
+
+      <button class="btn btn-primary">Search</button>
+    </div>
+  </form>
+
+  {% if wires %} {% for wire in wires %}
+
+  <div class="card shadow-sm mb-3">
+    <div class="card-body">
+      <h4>{{ wire.multiwire_no }}</h4>
+
+      <p>
+        Status :
+
+        <span class="badge bg-primary"> {{ wire.status }} </span>
+      </p>
+
+      <a href="/wire/{{ wire.id }}" class="btn btn-primary"> Open </a>
+    </div>
+  </div>
+
+  {% endfor %} {% else %}
+
+  <div class="alert alert-warning">No Multi Wires Found</div>
+
+  {% endif %}
 </div>
 
-{% endfor %} {% else %}
-
-<div class="alert alert-warning">No Multi Wires Found</div>
-
-{% endif %} {% endblock %}
+{% endblock %}
