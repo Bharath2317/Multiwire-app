@@ -18,7 +18,12 @@
   <form method="POST">
     {% if field_type == "textarea" %}
 
-    <textarea class="form-control" rows="5" name="{{ field_name }}">
+    <textarea
+      class="form-control form-control-lg"
+      rows="5"
+      name="{{ field_name }}"
+      required
+    >
 {{ value }}</textarea
     >
 
@@ -28,7 +33,7 @@
       class="form-control form-control-lg"
       type="{{ field_type }}"
       name="{{ field_name }}"
-      value="{% if field_name == 'entry_date' and value == '' %}{{ today }}{% else %}{{ value }}{% endif %}"
+      value="{{ value }}"
       required
     />
 
@@ -38,9 +43,7 @@
       {% if step > 0 %}
 
       <a
-        href="{{ url_for('entry.entry_step',
-                                    wire_id=wire.id,
-                                    step=step-1) }}"
+        href="{{ url_for('entry.entry_step', wire_id=wire.id, step=step-1) }}"
         class="btn btn-secondary"
       >
         ← Back
@@ -48,12 +51,17 @@
 
       {% else %}
 
-      <div></div>
+      <a
+        href="{{ url_for('wire.wire_details', id=wire.id) }}"
+        class="btn btn-secondary"
+      >
+        ← Back
+      </a>
 
       {% endif %}
 
-      <button class="btn btn-primary">
-        {% if step == total-1 %} Review {% else %} Next → {% endif %}
+      <button type="submit" class="btn btn-primary">
+        {% if step == total - 1 %} Review {% else %} Next → {% endif %}
       </button>
     </div>
   </form>

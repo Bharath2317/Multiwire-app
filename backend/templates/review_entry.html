@@ -1,0 +1,110 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-body">
+      <h2 class="mb-4">Review Daily Entry</h2>
+
+      <h5>
+        Multi Wire:
+        <strong>{{ wire.multiwire_no }}</strong>
+      </h5>
+
+      <hr />
+
+      <table class="table table-bordered">
+        <tr>
+          <th>Date</th>
+          <td>{{ data.get("entry_date", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>Working Hours</th>
+          <td>{{ data.get("working_hours", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>Start Time</th>
+          <td>{{ data.get("start_time", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>End Time</th>
+          <td>{{ data.get("end_time", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>Block Number</th>
+          <td>{{ data.get("block_number", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>Length</th>
+          <td>{{ data.get("length", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>Height</th>
+          <td>{{ data.get("height", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>No Of Wires</th>
+          <td>{{ data.get("no_of_wires", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>Material</th>
+          <td>{{ data.get("material", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>Hardness</th>
+          <td>{{ data.get("hardness", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>Down Speed</th>
+          <td>{{ data.get("down_speed", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>Peripheral Speed</th>
+          <td>{{ data.get("peripheral_speed", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>Tension</th>
+          <td>{{ data.get("tension", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>Ampere</th>
+          <td>{{ data.get("ampere", "") }}</td>
+        </tr>
+
+        <tr>
+          <th>Remarks</th>
+          <td>{{ data.get("remarks", "") }}</td>
+        </tr>
+      </table>
+
+      <div class="d-flex justify-content-between mt-4">
+        <a
+          href="{{ url_for('entry.entry_step', wire_id=wire.id, step=13) }}"
+          class="btn btn-secondary"
+        >
+          ← Back
+        </a>
+
+        <form method="POST">
+          <button type="submit" class="btn btn-success">
+            ✓ Confirm & Save
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

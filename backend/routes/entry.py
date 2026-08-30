@@ -56,16 +56,17 @@ def entry_step(wire_id, step):
         )
 
     return render_template(
-        "entry_step.html",
-        wire=wire,
-        field_name=field_name,
-        field_label=field_label,
-        field_type=field_type,
-        value=data.get(field_name, ""),
-        step=step,
-        total=len(FIELDS),
-        today=date.today().isoformat(),
-    )
+    "entry_step.html",
+    wire=wire,
+    field_name=field_name,
+    field_label=field_label,
+    field_type=field_type,
+    value=data.get(field_name, ""),
+    step=step,
+    total=len(FIELDS),
+    today=date.today().isoformat(),
+    is_decimal=(field_name == "working_hours"),
+)
 
 
 @entry_bp.route("/entry/<int:wire_id>/review", methods=["GET", "POST"])
