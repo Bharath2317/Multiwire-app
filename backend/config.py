@@ -9,6 +9,9 @@ def _database_uri():
     """DATABASE_URL wins (any SQLAlchemy URL); otherwise build the SQL Server URL."""
     url = os.getenv("DATABASE_URL")
     if url:
+        # Some hosts hand out the legacy "postgres://" scheme.
+        if url.startswith("postgres://"):
+            url = "postgresql://" + url[len("postgres://"):]
         return url
 
     driver = os.getenv("ODBC_DRIVER", "ODBC Driver 18 for SQL Server")

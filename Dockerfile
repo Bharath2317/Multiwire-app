@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl gnupg unix
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY backend/requirements.txt backend/requirements-mssql.txt ./
+RUN pip install --no-cache-dir -r requirements-mssql.txt
 COPY backend/ .
 
 ENV APP_ENV=production PORT=8000
