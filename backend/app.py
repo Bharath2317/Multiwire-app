@@ -11,6 +11,7 @@ from routes.entry import entry_bp
 from routes.dashboard import dashboard_bp
 from routes.wire import wire_bp
 from routes.export import export_bp
+from security import init_security
 
 
 NEW_ENTRY_COLUMNS = {
@@ -32,7 +33,14 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    if app.config["IS_PRODUCTION"]:
+        if app.config["SECRET_KEY"] == "dev-only-insecure-key":
+            raise RuntimeError("Set SECRET_KEY before running in production.")
+        if not app.config["APP_PASSWORD"]:
+            raise RuntimeError("Set APP_PASSWORD before running in production.")
+
     db.init_app(app)
+    init_security(app)
 
     with app.app_context():
         db.create_all()
@@ -49,4 +57,5 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(debug=os.getenv("FLASK_DEBUG", "1") == "1")
+    debug = not app.config["IS_PRODUCTION"] and os.getenv("FLASK_DEBUG", "1") == "1"
+    app.run(debug=debug)

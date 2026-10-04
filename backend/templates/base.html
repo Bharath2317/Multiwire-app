@@ -28,9 +28,17 @@
             >Production System</span
           >
         </a>
-        <a href="{{ url_for('wire.new_wire') }}" class="btn btn-light btn-sm">
-          <i class="bi bi-plus-lg"></i> New Multi Wire
-        </a>
+        <div class="d-flex gap-2">
+          <a href="{{ url_for('wire.new_wire') }}" class="btn btn-light btn-sm">
+            <i class="bi bi-plus-lg"></i> New Multi Wire
+          </a>
+          {% if auth_enabled() and session.get('auth') %}
+          <form method="POST" action="{{ url_for('auth.logout') }}" class="d-inline">
+            {{ csrf_input() }}
+            <button class="btn btn-outline-light btn-sm" title="Sign out"><i class="bi bi-box-arrow-right"></i></button>
+          </form>
+          {% endif %}
+        </div>
       </div>
     </nav>
 

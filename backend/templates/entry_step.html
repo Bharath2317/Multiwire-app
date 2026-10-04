@@ -22,7 +22,7 @@
         {% if hint %}· {{ hint }}{% endif %}
       </div>
 
-      <form method="POST">
+      <form method="POST">{{ csrf_input() }}
         {% if field_type == "textarea" %}
         <textarea
           class="form-control form-control-lg"

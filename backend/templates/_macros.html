@@ -51,6 +51,7 @@
               class="d-inline"
               onsubmit="return confirm('Delete this entry?');"
             >
+              {{ csrf_input() }}
               <button class="btn btn-outline-danger btn-sm" title="Delete">
                 <i class="bi bi-trash"></i>
               </button>

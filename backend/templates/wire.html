@@ -53,11 +53,13 @@
         {% if wire.status == "NEW SET" %}
         <form method="POST" action="{{ url_for('wire.finish_wire', id=wire.id) }}"
               onsubmit="return confirm('Finish NEW SET and move to After Replastification?');">
+          {{ csrf_input() }}
           <button class="btn btn-warning"><i class="bi bi-flag"></i> Finish New Set</button>
         </form>
         {% elif wire.status == "AFTER REPLASTIFICATION" %}
         <form method="POST" action="{{ url_for('wire.finish_wire', id=wire.id) }}"
               onsubmit="return confirm('Mark this Multi Wire as completed?');">
+          {{ csrf_input() }}
           <button class="btn btn-primary"><i class="bi bi-flag-fill"></i> Finish Replastification</button>
         </form>
         {% endif %}

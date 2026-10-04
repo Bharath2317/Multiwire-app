@@ -8,7 +8,7 @@
       <h3 class="mb-1">Create Multi Wire</h3>
       <p class="text-muted">Enter the set number to start tracking daily production.</p>
 
-      <form method="POST">
+      <form method="POST">{{ csrf_input() }}
         <label class="form-label fw-semibold" for="multiwire_no">Multi Wire Number</label>
         <input
           id="multiwire_no"
