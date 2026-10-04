@@ -1,129 +1,125 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge, entries_table %}
+{% block title %}{{ wire.multiwire_no }}{% endblock %}
 
-<div class="container mt-4">
-  <div class="card shadow">
-    <div class="card-body">
-      <h2>{{ wire.multiwire_no }}</h2>
+{% block content %}
 
-      <p>
-        <b>Status :</b>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item active">{{ wire.multiwire_no }}</li>
+  </ol>
+</nav>
 
-        <span class="badge bg-primary"> {{ wire.status }} </span>
-      </p>
+{% for label, used, cap in [("New Set", new_summary.count, new_capacity), ("After Replastification", replast_summary.count, replast_capacity)] %}
+  {% if used > cap %}
+  <div class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <strong>{{ label }}</strong> has {{ used }} entries but the Excel report only has room for {{ cap }}.
+    The last {{ used - cap }} will be missing from the export.
+  </div>
+  {% elif used == cap %}
+  <div class="alert alert-warning">
+    <i class="bi bi-exclamation-triangle"></i>
+    <strong>{{ label }}</strong> has used all {{ cap }} rows of the Excel report. New entries will not be exported.
+  </div>
+  {% elif used >= cap - 3 %}
+  <div class="alert alert-info">
+    <i class="bi bi-info-circle"></i>
+    <strong>{{ label }}</strong>: only {{ cap - used }} rows left in the Excel report.
+  </div>
+  {% endif %}
+{% endfor %}
 
-      <a href="/entry/{{ wire.id }}/step/0" class="btn btn-success">
-        ➕ Add Daily Entry
-      </a>
-
-      <form method="POST" action="/wire/{{ wire.id }}/finish" class="d-inline">
-        {% if wire.status == "NEW SET" %}
-
-        <button class="btn btn-warning">Finish NEW SET</button>
-
-        {% elif wire.status == "AFTER REPLASTIFICATION" %}
-
-        <button class="btn btn-primary">Finish AFTER REPLASTIFICATION</button>
-
-        {% else %}
-
-        <button class="btn btn-success" disabled>Completed</button>
-
-        {% endif %}
-      </form>
-      <a href="/export/{{ wire.id }}" class="btn btn-success">
-        📄 Export Excel
-      </a>
-
-      <hr />
-      <h4 class="mt-4">NEW SET</h4>
-
-      <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Block</th>
-              <th>Length</th>
-              <th>Height</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for e in entries %} {% if e.stage == "NEW SET" %}
-
-            <tr>
-              <td>{{ e.entry_date }}</td>
-              <td>{{ e.block_number }}</td>
-              <td>{{ e.length }}</td>
-              <td>{{ e.height }}</td>
-
-              <td>
-                <a href="/entry/edit/{{ e.id }}" class="btn btn-primary btn-sm">
-                  Edit
-                </a>
-
-                <a
-                  href="/entry/delete/{{ e.id }}"
-                  class="btn btn-danger btn-sm"
-                  onclick="return confirm('Delete this entry?');"
-                >
-                  Delete
-                </a>
-              </td>
-            </tr>
-
-            {% endif %} {% endfor %}
-          </tbody>
-        </table>
+<div class="card mb-4">
+  <div class="card-body">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+      <div>
+        <h3 class="mb-1">{{ wire.multiwire_no }}</h3>
+        {{ status_badge(wire.status) }}
       </div>
 
-      <hr class="my-5" />
+      <div class="d-flex flex-wrap gap-2">
+        <a href="{{ url_for('entry.new_entry', wire_id=wire.id) }}" class="btn btn-success">
+          <i class="bi bi-plus-lg"></i> Add Daily Entry
+        </a>
+        {% if total_summary.count %}
+        <a href="{{ url_for('entry.copy_last_entry', wire_id=wire.id) }}" class="btn btn-outline-success"
+           title="Start a new entry pre-filled from the last one">
+          <i class="bi bi-copy"></i> Copy Last Entry
+        </a>
+        {% endif %}
 
-      <h4>AFTER REPLASTIFICATION</h4>
+        {% if wire.status == "NEW SET" %}
+        <form method="POST" action="{{ url_for('wire.finish_wire', id=wire.id) }}"
+              onsubmit="return confirm('Finish NEW SET and move to After Replastification?');">
+          <button class="btn btn-warning"><i class="bi bi-flag"></i> Finish New Set</button>
+        </form>
+        {% elif wire.status == "AFTER REPLASTIFICATION" %}
+        <form method="POST" action="{{ url_for('wire.finish_wire', id=wire.id) }}"
+              onsubmit="return confirm('Mark this Multi Wire as completed?');">
+          <button class="btn btn-primary"><i class="bi bi-flag-fill"></i> Finish Replastification</button>
+        </form>
+        {% endif %}
 
-      <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Block</th>
-              <th>Length</th>
-              <th>Height</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for e in entries %} {% if e.stage == "AFTER REPLASTIFICATION" %}
-
-            <tr>
-              <td>{{ e.entry_date }}</td>
-              <td>{{ e.block_number }}</td>
-              <td>{{ e.length }}</td>
-              <td>{{ e.height }}</td>
-
-              <td>
-                <a href="/entry/edit/{{ e.id }}" class="btn btn-primary btn-sm">
-                  Edit
-                </a>
-
-                <a
-                  href="/entry/delete/{{ e.id }}"
-                  class="btn btn-danger btn-sm"
-                  onclick="return confirm('Delete this entry?');"
-                >
-                  Delete
-                </a>
-              </td>
-            </tr>
-
-            {% endif %} {% endfor %}
-          </tbody>
-        </table>
+        <a href="{{ url_for('export.export_excel', wire_id=wire.id) }}" class="btn btn-outline-secondary">
+          <i class="bi bi-file-earmark-excel"></i> Export Excel
+        </a>
       </div>
     </div>
+
+    <hr />
+
+    {% set steps = ["New Set", "After Replastification", "Completed"] %}
+    <div class="tracker">
+      {% for name in steps %}
+        {% if not loop.first %}<div class="bar {{ 'done' if loop.index0 <= stage_index else '' }}"></div>{% endif %}
+        <div class="node {{ 'done' if loop.index0 < stage_index or wire.status == 'COMPLETED' else ('current' if loop.index0 == stage_index else '') }}">
+          <div class="dot">
+            {% if loop.index0 < stage_index or wire.status == 'COMPLETED' %}<i class="bi bi-check-lg"></i>{% else %}{{ loop.index }}{% endif %}
+          </div>
+          <div class="name">{{ name }}</div>
+        </div>
+      {% endfor %}
+    </div>
   </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-4">
+    <div class="card stat">
+      <div class="icon icon-total"><i class="bi bi-journal-text"></i></div>
+      <div><div class="value">{{ total_summary.count }}</div><div class="label">Entries</div></div>
+    </div>
+  </div>
+  <div class="col-4">
+    <div class="card stat">
+      <div class="icon icon-replast"><i class="bi bi-clock"></i></div>
+      <div><div class="value">{{ "%.1f"|format(total_summary.hours) }}</div><div class="label">Working hours</div></div>
+    </div>
+  </div>
+  <div class="col-4">
+    <div class="card stat">
+      <div class="icon icon-done"><i class="bi bi-bounding-box"></i></div>
+      <div><div class="value">{{ "%.2f"|format(total_summary.sqmt) }}</div><div class="label">Total SQMT</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header d-flex justify-content-between">
+    <span>New Set</span>
+    <span class="text-muted small">{{ new_summary.count }} / {{ new_capacity }} rows used</span>
+  </div>
+  {{ entries_table(new_set, new_summary) }}
+</div>
+
+<div class="card">
+  <div class="card-header d-flex justify-content-between">
+    <span>After Replastification</span>
+    <span class="text-muted small">{{ replast_summary.count }} / {{ replast_capacity }} rows used</span>
+  </div>
+  {{ entries_table(replast, replast_summary) }}
 </div>
 
 {% endblock %}

@@ -1,110 +1,43 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block title %}Review Entry{% endblock %}
 
-<div class="container mt-4">
-  <div class="card shadow">
-    <div class="card-body">
-      <h2 class="mb-4">Review Daily Entry</h2>
+{% block content %}
+<div class="wizard">
+  <div class="card">
+    <div class="card-body p-4">
+      <h3 class="mb-1">Review Daily Entry</h3>
+      <p class="text-muted mb-3">
+        Multi Wire <strong>{{ wire.multiwire_no }}</strong>
+        {% if editing %}<span class="badge text-bg-warning ms-1">Editing</span>{% endif %}
+      </p>
 
-      <h5>
-        Multi Wire:
-        <strong>{{ wire.multiwire_no }}</strong>
-      </h5>
-
-      <hr />
-
-      <table class="table table-bordered">
-        <tr>
-          <th>Date</th>
-          <td>{{ data.get("entry_date", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>Working Hours</th>
-          <td>{{ data.get("working_hours", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>Start Time</th>
-          <td>{{ data.get("start_time", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>End Time</th>
-          <td>{{ data.get("end_time", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>Block Number</th>
-          <td>{{ data.get("block_number", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>Length</th>
-          <td>{{ data.get("length", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>Height</th>
-          <td>{{ data.get("height", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>No Of Wires</th>
-          <td>{{ data.get("no_of_wires", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>Material</th>
-          <td>{{ data.get("material", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>Hardness</th>
-          <td>{{ data.get("hardness", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>Down Speed</th>
-          <td>{{ data.get("down_speed", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>Peripheral Speed</th>
-          <td>{{ data.get("peripheral_speed", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>Tension</th>
-          <td>{{ data.get("tension", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>Ampere</th>
-          <td>{{ data.get("ampere", "") }}</td>
-        </tr>
-
-        <tr>
-          <th>Remarks</th>
-          <td>{{ data.get("remarks", "") }}</td>
-        </tr>
-      </table>
+      <div class="review-list">
+        {% for label, value in rows %}
+        <div class="row align-items-center">
+          <dt class="col-5 mb-0">{{ label }}</dt>
+          <dd class="col-5 mb-0">{{ value if value != "" else "–" }}</dd>
+          <div class="col-2 text-end">
+            <a class="edit-link" href="{{ url_for('entry.entry_step', wire_id=wire.id, step=loop.index0) }}">Edit</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
 
       <div class="d-flex justify-content-between mt-4">
         <a
-          href="{{ url_for('entry.entry_step', wire_id=wire.id, step=13) }}"
-          class="btn btn-secondary"
+          href="{{ url_for('entry.entry_step', wire_id=wire.id, step=rows|length - 1) }}"
+          class="btn btn-outline-secondary btn-lg"
         >
-          ← Back
+          <i class="bi bi-arrow-left"></i> Back
         </a>
 
         <form method="POST">
-          <button type="submit" class="btn btn-success">
-            ✓ Confirm & Save
+          <button type="submit" class="btn btn-success btn-lg">
+            <i class="bi bi-check-lg"></i> Confirm &amp; Save
           </button>
         </form>
       </div>
     </div>
   </div>
 </div>
-
 {% endblock %}

@@ -3,6 +3,10 @@ from openpyxl import load_workbook
 
 from models.entry import Entry
 
+# Rows available in the Excel template (one entry every 2 rows)
+NEW_SET_CAPACITY = 32      # rows 8..70
+REPLAST_CAPACITY = 22      # rows 75..117
+
 
 def generate_excel(wire):
 
@@ -50,11 +54,12 @@ def generate_excel(wire):
     # --------------------------------
 
     new_set_row = 8
+    new_set_number = 1
 
     # Maximum NEW SET rows:
     # 8,10,12,...,70
 
-    for i, entry in enumerate(entries):
+    for entry in entries:
 
         if getattr(entry, "stage", "NEW SET") != "NEW SET":
             continue
@@ -65,10 +70,11 @@ def generate_excel(wire):
         write_entry(
             sheet,
             new_set_row,
-            i + 1,
+            new_set_number,
             entry
         )
 
+        new_set_number += 1
         new_set_row += 2
 
     # --------------------------------
@@ -155,21 +161,13 @@ def write_entry(sheet, row, serial_no, entry):
     sheet[f"N{row}"] = entry.tension
 
     # Bead diameter
-    sheet[f"O{row}"] = getattr(
-        entry,
-        "bead_diameter",
-        None
-    )
+    sheet[f"O{row}"] = entry.bead_diameter
 
     # Ampere
     sheet[f"P{row}"] = entry.ampere
 
     # Broken wire code
-    sheet[f"Q{row}"] = getattr(
-        entry,
-        "broken_wire_code",
-        None
-    )
+    sheet[f"Q{row}"] = entry.broken_wire_code
 
     # SQMT
     sheet[f"S{row}"] = (

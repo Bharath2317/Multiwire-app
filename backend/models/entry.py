@@ -41,6 +41,10 @@ class Entry(db.Model):
 
     ampere = db.Column(db.Float)
 
+    bead_diameter = db.Column(db.Float)
+
+    broken_wire_code = db.Column(db.String(50))
+
     remarks = db.Column(db.Text)
 
     stage = db.Column(

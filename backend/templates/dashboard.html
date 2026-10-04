@@ -1,62 +1,69 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}Dashboard{% endblock %}
 
-<div class="container mt-4">
-  <!-- Dashboard Cards -->
-  <div class="row mb-4">
-    <div class="col-md-4">
-      <div class="card shadow text-center">
-        <div class="card-body">
-          <h5>Total Wires</h5>
+{% block content %}
 
-          <h2>{{ wires|length }}</h2>
-        </div>
+<div class="row g-3 mb-4">
+  {% for icon, cls, label, key in [
+    ("collection", "icon-total", "Total wires", "total"),
+    ("play-circle", "icon-new", "New set", "new"),
+    ("arrow-repeat", "icon-replast", "After replastification", "replast"),
+    ("check-circle", "icon-done", "Completed", "done")
+  ] %}
+  <div class="col-6 col-lg-3">
+    <div class="card stat">
+      <div class="icon {{ cls }}"><i class="bi bi-{{ icon }}"></i></div>
+      <div>
+        <div class="value">{{ counts[key] }}</div>
+        <div class="label">{{ label }}</div>
       </div>
     </div>
   </div>
+  {% endfor %}
+</div>
 
-  <!-- Header -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Dashboard</h2>
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h4 class="mb-0">Multi Wires</h4>
 
-    <a href="/new" class="btn btn-success"> + New Multi Wire </a>
-  </div>
-
-  <!-- Search -->
-  <form method="GET" class="mb-4">
+  <form method="GET" class="d-flex gap-2">
     <div class="input-group">
+      <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
       <input
         type="text"
         name="search"
         class="form-control"
-        placeholder="Search Multi Wire..."
+        placeholder="Search number…"
         value="{{ search }}"
       />
-
-      <button class="btn btn-primary">Search</button>
     </div>
+    <button class="btn btn-primary">Search</button>
+    {% if search %}
+    <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-outline-secondary">Clear</a>
+    {% endif %}
   </form>
+</div>
 
-  {% if wires %} {% for wire in wires %}
-
-  <div class="card shadow-sm mb-3">
-    <div class="card-body">
-      <h4>{{ wire.multiwire_no }}</h4>
-
-      <p>
-        Status :
-
-        <span class="badge bg-primary"> {{ wire.status }} </span>
-      </p>
-
-      <a href="/wire/{{ wire.id }}" class="btn btn-primary"> Open </a>
+<div class="card">
+  {% for wire in wires %}
+  <a href="{{ url_for('wire.wire_details', id=wire.id) }}" class="wire-row">
+    <div>
+      <div class="no">{{ wire.multiwire_no }}</div>
+      <div class="sub">
+        {{ wire.entries|length }} entries · created {{ wire.created_at.strftime("%d %b %Y") }}
+      </div>
     </div>
+    <div class="d-flex align-items-center gap-3">
+      {{ status_badge(wire.status) }}
+      <i class="bi bi-chevron-right text-muted"></i>
+    </div>
+  </a>
+  {% else %}
+  <div class="empty">
+    <i class="bi bi-search"></i>
+    {% if search %}No Multi Wires match “{{ search }}”.{% else %}No Multi Wires yet. Create your first one.{% endif %}
   </div>
-
-  {% endfor %} {% else %}
-
-  <div class="alert alert-warning">No Multi Wires Found</div>
-
-  {% endif %}
+  {% endfor %}
 </div>
 
 {% endblock %}

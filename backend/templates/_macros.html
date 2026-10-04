@@ -1,0 +1,79 @@
+{% macro status_badge(status) %}
+  {% if status == "NEW SET" %}
+    <span class="status-badge status-new">New Set</span>
+  {% elif status == "AFTER REPLASTIFICATION" %}
+    <span class="status-badge status-replast">After Replastification</span>
+  {% else %}
+    <span class="status-badge status-done">Completed</span>
+  {% endif %}
+{% endmacro %}
+
+{% macro entries_table(entries, summary) %}
+  {% if entries %}
+  <div class="table-responsive">
+    <table class="table table-hover mw-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th class="text-end">Hours</th>
+          <th>Block</th>
+          <th>Material</th>
+          <th class="text-end">Length</th>
+          <th class="text-end">Height</th>
+          <th class="text-end">Wires</th>
+          <th class="text-end">Tension</th>
+          <th class="text-end">Ampere</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in entries %}
+        <tr>
+          <td class="text-nowrap">{{ e.entry_date.strftime("%d %b %Y") }}</td>
+          <td class="text-end">{{ e.working_hours if e.working_hours is not none else "–" }}</td>
+          <td>{{ e.block_number or "–" }}</td>
+          <td>{{ e.material or "–" }}</td>
+          <td class="text-end">{{ e.length if e.length is not none else "–" }}</td>
+          <td class="text-end">{{ e.height if e.height is not none else "–" }}</td>
+          <td class="text-end">{{ e.no_of_wires if e.no_of_wires is not none else "–" }}</td>
+          <td class="text-end">{{ e.tension if e.tension is not none else "–" }}</td>
+          <td class="text-end">{{ e.ampere if e.ampere is not none else "–" }}</td>
+          <td class="text-end text-nowrap">
+            <a
+              href="{{ url_for('entry.edit_entry', id=e.id) }}"
+              class="btn btn-outline-primary btn-sm"
+              title="Edit"
+              ><i class="bi bi-pencil"></i
+            ></a>
+            <form
+              method="POST"
+              action="{{ url_for('entry.delete_entry', id=e.id) }}"
+              class="d-inline"
+              onsubmit="return confirm('Delete this entry?');"
+            >
+              <button class="btn btn-outline-danger btn-sm" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>{{ summary.count }} entries</td>
+          <td class="text-end">{{ "%.1f"|format(summary.hours) }}</td>
+          <td colspan="8" class="text-end">
+            Total area: {{ "%.2f"|format(summary.sqmt) }} SQMT
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">
+    <i class="bi bi-inbox"></i>
+    No entries yet
+  </div>
+  {% endif %}
+{% endmacro %}
